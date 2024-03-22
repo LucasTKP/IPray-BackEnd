@@ -4,8 +4,7 @@ const app = App({
   logger: true
 })
 
-const port = process.env.PORT || 5000
-app.listen({ port:Number(port)}, (err, address) => {
+app.listen(process.env.PORT || 5000, (err, address) => {
   if (err) {
     console.error(err)
     process.exit(1)
