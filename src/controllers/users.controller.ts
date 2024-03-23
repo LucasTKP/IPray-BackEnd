@@ -4,12 +4,12 @@ import prisma from "../database/cliente";
 import formatPrismaError from "../utils/formatPrismaErros";
 import { User } from "@prisma/client";
 
-export const handleCreateUser = async (req: { body: User }, res: Response) => {
+export const handleCreateUser = async (req: { body: Omit<User, 'created_date'> }, res: Response) => {
   try {
-    const { name, email, age, state, city, urlImage, total, streak} = req.body;
+    const { name, email, age, state, city, urlImage, total, streak } = req.body;
 
     const result = await prisma.user.create({
-      data: { name, email, age, state, city, urlImage, total, streak, }
+      data: { name, email, age, state, city, urlImage, total, streak },
     });
 
     res.status(200).send(result).end();
@@ -19,7 +19,8 @@ export const handleCreateUser = async (req: { body: User }, res: Response) => {
       console.log(formattedError);
       res
         .status(formattedError.statusCode)
-        .send({ error: formattedError.error, message: formattedError.message }).end();
+        .send({ error: formattedError.error, message: formattedError.message })
+        .end();
     } else {
       res.status(404).send({ message: "Something didn't work, try again." });
     }
