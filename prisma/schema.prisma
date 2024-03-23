@@ -18,7 +18,7 @@ model User {
   urlImage String
   total Int
   streak Int
-  created_date DateTime
+  created_date DateTime @default(now())
   praies Pray[]
 }
 

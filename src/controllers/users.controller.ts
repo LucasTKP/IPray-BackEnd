@@ -6,10 +6,10 @@ import { User } from "@prisma/client";
 
 export const handleCreateUser = async (req: { body: User }, res: Response) => {
   try {
-    const { name, email, age, state, city, urlImage, total, streak, created_date } = req.body;
+    const { name, email, age, state, city, urlImage, total, streak} = req.body;
 
     const result = await prisma.user.create({
-      data: { name, email, age, state, city, urlImage, total, streak, created_date }
+      data: { name, email, age, state, city, urlImage, total, streak, }
     });
 
     res.status(200).send(result).end();
