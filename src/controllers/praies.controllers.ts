@@ -14,14 +14,14 @@ export const handleCreatePray = async (
 
     const result = await prisma.pray.create({ data: { id_user, date } });
 
-    res.status(200).send(result);
+    res.status(201).send(result);
   } catch (error: any) {
     console.log(error);
     if (error instanceof PrismaClientKnownRequestError) {
       const formattedError = formatPrismaError(error);
       res
         .status(formattedError.statusCode)
-        .send({ error: formattedError.error, message: formattedError.message });
+        .send({ error: formattedError.error, message: formattedError.message }).end();
     } else {
       res.status(404).send({ message: "Something didn't work, try again." });
     }
@@ -43,7 +43,7 @@ export const handleDeletePray = async (
       const formattedError = formatPrismaError(error);
       res
         .status(formattedError.statusCode)
-        .send({ error: formattedError.error, message: formattedError.message });
+        .send({ error: formattedError.error, message: formattedError.message }).end();
     } else {
       res.status(404).send({ message: "Something didn't work, try again." });
     }

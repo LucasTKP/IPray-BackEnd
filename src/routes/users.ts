@@ -1,23 +1,13 @@
-import { Request, Response, Router } from "express";
-import { handleCreateUser } from "../controllers/users.controller";
+import { Router } from "express";
+import { handleCreateUser, handleGetTopStreakUser, handleGetTopTotalUser, handleGetUser, handleUpdateUser } from "../controllers/users.controller";
 const router = Router();
 
-/* GET home page. */
-router.get("/", function (req: Request, res: Response) {
-  res.send("Fetched all users");
-});
+router.post('/', handleCreateUser)
+router.get('/:email', handleGetUser)
+router.get('/topStreak/:skip/:take', handleGetTopStreakUser)
+router.get('/topTotal/:skip/:take', handleGetTopTotalUser)
+router.put('/', handleUpdateUser)
+router.delete("/:email", handleCreateUser)
 
-/* POST a user */
-router.post("/", handleCreateUser);
-
-/* PATCH a user */
-router.patch("/", function (req: Request, res: Response) {
-  res.send("Updated a user");
-});
-
-/* DELETE a user */
-router.delete("/", function (req: Request, res: Response) {
-  res.send("Deleted a user");
-});
 
 export default router;
