@@ -18,7 +18,6 @@ export const handleCreateUser = async (req: { body: Omit<User, 'created_date'> }
       const formattedError = formatPrismaError(error);
       console.log(formattedError);
       res
-        .status(formattedError.statusCode)
         .send({ error: formattedError.error, message: formattedError.message })
         .end();
     } else {
@@ -29,6 +28,7 @@ export const handleCreateUser = async (req: { body: Omit<User, 'created_date'> }
 
 
 export const handleGetUser = async (req: { query: { praies: boolean }, params: { email: string } }, res: Response) => {
+
   const include = {
     praies: false,
   };

@@ -10,7 +10,9 @@ export const handleCreatePray = async (
   res: Response
 ) => {
   try {
-    const { id_user, date } = req.body;
+    const id_user  = req.body.id_user;
+    const date = new Date(req.body.date);
+    console.log(date);
 
     const result = await prisma.pray.create({ data: { id_user, date } });
 
