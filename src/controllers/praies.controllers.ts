@@ -25,7 +25,6 @@ export const handleCreatePray = async (
       },
     });
 
-
     res.status(201).send(result);
   } catch (error: any) {
     console.log(error);
@@ -58,6 +57,32 @@ export const handleDeletePray = async (
         },
       },
     });
+
+    res.status(200).send(result);
+  } catch (error: any) {
+    if (error as PrismaClientKnownRequestError) {
+      const formattedError = formatPrismaError(error);
+      res
+        .status(formattedError.statusCode)
+        .send({ error: formattedError.error, message: formattedError.message })
+        .end();
+    } else {
+      res.status(404).send({ message: "Something didn't work, try again." });
+    }
+  }
+};
+
+export const handleGetPray = async (
+  req: { params: { idUser: string; date: string } },
+  res: Response
+) => {
+  const newDate = new Date(req.params.date);
+  try {
+    const result = await prisma.pray.findFirst({
+      where: { id_user: Number(req.params.idUser), date: newDate },
+    });
+
+    console.log(result);
 
     res.status(200).send(result);
   } catch (error: any) {
