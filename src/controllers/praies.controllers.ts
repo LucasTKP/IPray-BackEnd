@@ -93,7 +93,7 @@ export const handleGetPray = async (
       return res.status(200).send(result);
     } 
 
-    return res.status(200).end();
+    return res.status(204).end();
   } catch (error: any) {
     if (error as PrismaClientKnownRequestError) {
       const formattedError = formatPrismaError(error);
