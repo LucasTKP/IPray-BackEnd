@@ -4,12 +4,35 @@ import prisma from "../database/cliente";
 import formatPrismaError from "../utils/formatPrismaErros";
 import { User } from "@prisma/client";
 
-export const handleCreateUser = async (req: { body: Omit<User, 'created_date'> }, res: Response) => {
+export const handleCreateUser = async (
+  req: { body: Omit<User, "created_date"> },
+  res: Response
+) => {
+  const now = new Date();
+  const created_date = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    0,
+    0,
+    0,
+    0
+  );
   try {
     const { name, email, age, state, city, urlImage, total, streak } = req.body;
 
     const result = await prisma.user.create({
-      data: { name, email, age, state, city, urlImage, total, streak },
+      data: {
+        name,
+        email,
+        age,
+        state,
+        city,
+        urlImage,
+        total,
+        streak,
+        created_date,
+      },
     });
 
     res.status(200).send(result).end();
@@ -26,9 +49,10 @@ export const handleCreateUser = async (req: { body: Omit<User, 'created_date'> }
   }
 };
 
-
-export const handleGetUser = async (req: { query: { praies: boolean }, params: { email: string } }, res: Response) => {
-
+export const handleGetUser = async (
+  req: { query: { praies: boolean }; params: { email: string } },
+  res: Response
+) => {
   const include = {
     praies: false,
   };
@@ -49,15 +73,21 @@ export const handleGetUser = async (req: { query: { praies: boolean }, params: {
       const formattedError = formatPrismaError(error);
       res
         .status(formattedError.statusCode)
-        .send({ error: formattedError.error, message: formattedError.message }).end();
+        .send({ error: formattedError.error, message: formattedError.message })
+        .end();
     } else {
-      res.status(404).send({ message: "Something didn't work, try again." }).end();
+      res
+        .status(404)
+        .send({ message: "Something didn't work, try again." })
+        .end();
     }
   }
-}
+};
 
-
-export const handleGetTopStreakUser = async (req: { query: { praies: boolean }, params: { skip: number, take: number } }, res: Response) => {
+export const handleGetTopStreakUser = async (
+  req: { query: { praies: boolean }; params: { skip: number; take: number } },
+  res: Response
+) => {
   const include = {
     praies: false,
   };
@@ -79,15 +109,18 @@ export const handleGetTopStreakUser = async (req: { query: { praies: boolean }, 
       const formattedError = formatPrismaError(error);
       res
         .status(formattedError.statusCode)
-        .send({ error: formattedError.error, message: formattedError.message }).end();
+        .send({ error: formattedError.error, message: formattedError.message })
+        .end();
     } else {
       res.status(404).send({ message: "Something didn't work, try again." });
     }
   }
-}
+};
 
-
-export const handleGetTopTotalUser = async (req: { query: { praies: boolean }, params: { skip: number, take: number } }, res: Response) => {
+export const handleGetTopTotalUser = async (
+  req: { query: { praies: boolean }; params: { skip: number; take: number } },
+  res: Response
+) => {
   const include = {
     praies: false,
   };
@@ -109,12 +142,13 @@ export const handleGetTopTotalUser = async (req: { query: { praies: boolean }, p
       const formattedError = formatPrismaError(error);
       res
         .status(formattedError.statusCode)
-        .send({ error: formattedError.error, message: formattedError.message }).end();
+        .send({ error: formattedError.error, message: formattedError.message })
+        .end();
     } else {
       res.status(404).send({ message: "Something didn't work, try again." });
     }
   }
-}
+};
 
 export const handleUpdateUser = async (req: { body: User }, res: Response) => {
   const { name, email, age, city, total, streak } = req.body;
@@ -129,15 +163,18 @@ export const handleUpdateUser = async (req: { body: User }, res: Response) => {
       const formattedError = formatPrismaError(error);
       res
         .status(formattedError.statusCode)
-        .send({ error: formattedError.error, message: formattedError.message }).end();
+        .send({ error: formattedError.error, message: formattedError.message })
+        .end();
     } else {
       res.status(404).send({ message: "Something didn't work, try again." });
     }
   }
-}
+};
 
-
-export const handleDeletUser = async (req:{params: {email:string}}, res:Response) => {
+export const handleDeletUser = async (
+  req: { params: { email: string } },
+  res: Response
+) => {
   try {
     const result = await prisma.user.delete({
       where: { email: req.params.email },
@@ -154,4 +191,4 @@ export const handleDeletUser = async (req:{params: {email:string}}, res:Response
       res.status(404).send({ message: "Something didn't work, try again." });
     }
   }
-}
+};
