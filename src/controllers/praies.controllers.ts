@@ -89,8 +89,11 @@ export const handleGetPray = async (
     const result = await prisma.pray.findFirst({
       where: { id_user: Number(req.params.idUser), date: newDate },
     });
+    if(result){
+      return res.status(200).send(result);
+    } 
 
-    res.status(200).send(result);
+    return res.status(404).send({ message: "Pray not found" });
   } catch (error: any) {
     if (error as PrismaClientKnownRequestError) {
       const formattedError = formatPrismaError(error);
