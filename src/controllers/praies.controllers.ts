@@ -1,4 +1,3 @@
-
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import prisma from "../database/cliente";
 import formatPrismaError from "../utils/formatPrismaErros";
@@ -6,15 +5,26 @@ import { Response } from "express";
 import { Pray } from "@prisma/client";
 
 export const handleCreatePray = async (
-  req:  {body: Pray },
+  req: { body: { id_user: number; date: Date } },
   res: Response
 ) => {
   try {
-    const id_user  = req.body.id_user;
+    const { id_user } = req.body;
     const date = new Date(req.body.date);
+
     console.log(date);
 
     const result = await prisma.pray.create({ data: { id_user, date } });
+
+    const response = await prisma.user.update({
+      where: { id: id_user },
+      data: {
+        total: {
+          increment: 1,
+        },
+      },
+    });
+
 
     res.status(201).send(result);
   } catch (error: any) {
@@ -23,7 +33,8 @@ export const handleCreatePray = async (
       const formattedError = formatPrismaError(error);
       res
         .status(formattedError.statusCode)
-        .send({ error: formattedError.error, message: formattedError.message }).end();
+        .send({ error: formattedError.error, message: formattedError.message })
+        .end();
     } else {
       res.status(404).send({ message: "Something didn't work, try again." });
     }
@@ -31,12 +42,21 @@ export const handleCreatePray = async (
 };
 
 export const handleDeletePray = async (
-  req: {params:{id: string}},
+  req: { params: { id: string } },
   res: Response
 ) => {
   try {
     const result = await prisma.pray.delete({
       where: { id: Number(req.params.id) },
+    });
+
+    const response = await prisma.user.update({
+      where: { id: result.id_user },
+      data: {
+        total: {
+          decrement: 1,
+        },
+      },
     });
 
     res.status(200).send(result);
@@ -45,10 +65,10 @@ export const handleDeletePray = async (
       const formattedError = formatPrismaError(error);
       res
         .status(formattedError.statusCode)
-        .send({ error: formattedError.error, message: formattedError.message }).end();
+        .send({ error: formattedError.error, message: formattedError.message })
+        .end();
     } else {
       res.status(404).send({ message: "Something didn't work, try again." });
     }
   }
 };
-
