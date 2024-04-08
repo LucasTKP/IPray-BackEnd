@@ -3,7 +3,7 @@ import { handleCreatePray, handleDeletePray, handleGetPray } from "../controller
 const router = Router();
 
 router.post("/", handleCreatePray);
-router.delete("/:id", handleDeletePray);
+router.delete("/:idUser/:date", handleDeletePray);
 router.get("/:idUser/:date", handleGetPray);
 
 

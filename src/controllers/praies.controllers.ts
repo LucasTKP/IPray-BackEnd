@@ -41,22 +41,30 @@ export const handleCreatePray = async (
 };
 
 export const handleDeletePray = async (
-  req: { params: { id: string } },
+  req: { params: { idUser: string; date: string } },
   res: Response
 ) => {
   try {
-    const result = await prisma.pray.delete({
-      where: { id: Number(req.params.id) },
+    const newDate = new Date(req.params.date);
+
+    const result = await prisma.pray.findFirst({
+      where: { id_user: Number(req.params.idUser), date: newDate },
     });
 
-    const response = await prisma.user.update({
-      where: { id: result.id_user },
-      data: {
-        total: {
-          decrement: 1,
+    if (result) {
+      await prisma.pray.delete({
+        where: { id: result.id },
+      });
+
+      await prisma.user.update({
+        where: { id: result.id_user },
+        data: {
+          total: {
+            decrement: 1,
+          },
         },
-      },
-    });
+      });
+    }
 
     res.status(200).send(result);
   } catch (error: any) {
@@ -81,8 +89,6 @@ export const handleGetPray = async (
     const result = await prisma.pray.findFirst({
       where: { id_user: Number(req.params.idUser), date: newDate },
     });
-
-    console.log(result);
 
     res.status(200).send(result);
   } catch (error: any) {
