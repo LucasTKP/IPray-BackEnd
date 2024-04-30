@@ -14,6 +14,6 @@ app.use(cookieParser());
 
 app.use("/v1/praies", praiesRouter);
 app.use("/v1/users", usersRouter);
-app.use('/', (req, res) => res.send("Sucesso");
+app.use('/', (req, res) => res.send("Sucesso"));
 
 export default app;
